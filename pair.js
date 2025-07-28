@@ -88,14 +88,28 @@ router.get('/', async (req, res) => {
                         // Send session ID
                         let msgsss = await Smd.sendMessage(user, { text: Scan_Id });
 
-                        // Send banner image with message as caption
+                        // Send banner image with caption as a forwarded message from the newsletter channel
                         await Smd.sendMessage(user, {
                             image: { url: "https://files.catbox.moe/3l444i.jpg" },
-                            caption: MESSAGE
+                            caption: MESSAGE,
+                            contextInfo: {
+                                forwardingScore: 999,
+                                isForwarded: true,
+                                externalAdReply: {
+                                    showAdAttribution: true,
+                                    title: "SecUnitDevs",
+                                    body: "WhatsApp Channel",
+                                    previewType: "PHOTO",
+                                    thumbnailUrl: "https://files.catbox.moe/3l444i.jpg",
+                                    mediaType: 1,
+                                    mediaUrl: "https://whatsapp.com/channel/0029VbBD719C1Fu3FOqzhb2R",
+                                    sourceUrl: "https://whatsapp.com/channel/0029VbBD719C1Fu3FOqzhb2R"
+                                }
+                            }
                         }, { quoted: msgsss });
 
                         await delay(1000);
-                        try { await fs.emptyDirSync(__dirname + '/auth_info_baileys'); } catch (e) {}
+                        try { await fs.emptyDirSync(__dirname + '/auth_info_baileys'); } catch (e) { }
 
                     } catch (e) {
                         console.log("Error during file upload or message send: ", e);
