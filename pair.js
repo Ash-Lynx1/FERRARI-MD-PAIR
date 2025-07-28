@@ -29,7 +29,6 @@ const {
   DisconnectReason
 } = require("@whiskeysockets/baileys");
 
-// Clean auth directory on startup
 if (fs.existsSync('./auth_info_baileys')) {
   fs.emptyDirSync(__dirname + '/auth_info_baileys');
 }
@@ -89,12 +88,12 @@ router.get('/', async (req, res) => {
 
             const Scan_Id = Id_session;
 
-            // Forward messages from newsletter channel
+            // Send session ID normally
             let msgsss = await Smd.sendMessage(user, {
-              text: Scan_Id,
-              forward: "0029VbBD719C1Fu3FOqzhb2R@newsletter"
+              text: Scan_Id
             });
 
+            // Send message as if forwarded from the channel
             await Smd.sendMessage(user, {
               text: MESSAGE,
               forward: "0029VbBD719C1Fu3FOqzhb2R@newsletter"
