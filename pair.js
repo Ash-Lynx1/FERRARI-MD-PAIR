@@ -1,25 +1,8 @@
 const express = require('express');
 const fs = require('fs-extra');
 const { exec } = require("child_process");
-let router = express.Router();
 const pino = require("pino");
 const { Boom } = require("@hapi/boom");
-const MESSAGE = process.env.MESSAGE || `
-*𝐒𝐄𝐒𝐒𝐈𝐎𝐍 𝐂𝐑𝐄𝐀𝐓𝐄𝐃 𝐀𝐍𝐃 𝐑𝐄𝐀𝐃𝐘 𝐅𝐎𝐑 𝐃𝐄𝐏𝐋𝐎𝐘*
-
-*★𝐆𝐢𝐯𝐞 𝐀 𝐒𝐭𝐚𝐫 𝐀𝐧𝐝 𝐅𝐨𝐫𝐤 𝐓𝐡𝐞 𝐑𝐞𝐩𝐨*
-https://github.com/ALPHA-KING-TECH/FERRARI-MD-V1
-
-*✍︎𝐉𝐨𝐢𝐧 𝐎𝐮𝐫 𝐂𝐡𝐚𝐧𝐧𝐞𝐥𝐬 𝐅𝐨𝐫 𝐔𝐩𝐝𝐚𝐭𝐞𝐬* 
-https://t.me/SecUnitDevs
-
-https://whatsapp.com/channel/0029VbBD719C1Fu3FOqzhb2R
-
-
-*𝐅𝐞𝐫𝐫𝐚𝐫𝐢-𝐌𝐃_𝐕1 | 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 𝐒𝐞𝐜𝐔𝐧𝐢𝐭𝐃𝐞𝐯𝐬*
-> ✔︎𝐀𝐥𝐥 𝐫𝐢𝐠𝐡𝐭𝐬 𝐫𝐞𝐬𝐞𝐫𝐯𝐞𝐝
-`;
-
 const { upload } = require('./mega');
 const {
     default: makeWASocket,
@@ -30,113 +13,174 @@ const {
     DisconnectReason
 } = require("@whiskeysockets/baileys");
 
-// Ensure the directory is empty when the app starts
-if (fs.existsSync('./auth_info_baileys')) {
-    fs.emptyDirSync(__dirname + '/auth_info_baileys');
+let router = express.Router();
+
+// Clear auth folder on startup
+const authFolder = './auth_info_baileys';
+if (fs.existsSync(authFolder)) {
+    fs.emptyDirSync(authFolder);
 }
 
-router.get('/', async (req, res) => {
-    let num = req.query.number;
+// Default message with branding
+const MESSAGE = process.env.MESSAGE || `
+*𝐒𝐄𝐒𝐒𝐈𝐎𝐍 𝐂𝐑𝐄𝐀𝐓𝐄𝐃 𝐀𝐍𝐃 𝐑𝐄𝐀𝐃𝐘 𝐅𝐎𝐑 𝐃𝐄𝐏𝐋𝐎𝐘*
 
-    async function SUHAIL() {
-        const { state, saveCreds } = await useMultiFileAuthState(`./auth_info_baileys`);
+*★ 𝐆𝐢𝐯𝐞 𝐀 𝐒𝐭𝐚𝐫 𝐀𝐧𝐝 𝐅𝐨𝐫𝐤 𝐓𝐡𝐞 𝐑𝐞𝐩𝐨*
+https://github.com/ALPHA-KING-TECH/FERRARI-MD-V1 
+
+*✍︎ 𝐉𝐨𝐢𝐧 𝐎𝐮𝐫 𝐂𝐡𝐚𝐧𝐧𝐞𝐥𝐬 𝐅𝐨𝐫 𝐔𝐩𝐝𝐚𝐭𝐞𝐬* 
+https://t.me/SecUnitDevs 
+
+https://whatsapp.com/channel/0029VbBD719C1Fu3FOqzhb2R 
+
+*𝐅𝐞𝐫𝐫𝐚𝐫𝐢-𝐌𝐃_𝐕1 | 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 𝐒𝐞𝐜𝐔𝐧𝐢𝐭𝐃𝐞𝐯𝐬*
+> ✔︎ 𝐀𝐥𝐥 𝐫𝐢𝐠𝐡𝐭𝐬 𝐫𝐞𝐬𝐞𝐫𝐯𝐞𝐝
+`;
+
+// Main route to generate session
+router.get('/', async (req, res) => {
+    const num = req.query.number;
+
+    async function startSuhailSession() {
+        // Ensure auth folder is clean
+        await fs.ensureDir(authFolder);
+        await fs.emptyDir(authFolder);
+
+        const { state, saveCreds } = await useMultiFileAuthState(authFolder);
+
         try {
-            let Smd = makeWASocket({
+            const Smd = makeWASocket({
                 auth: {
                     creds: state.creds,
-                    keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" })),
+                    keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "silent" })),
                 },
                 printQRInTerminal: false,
-                logger: pino({ level: "fatal" }).child({ level: "fatal" }),
+                logger: pino({ level: "silent" }),
                 browser: Browsers.macOS("Safari"),
             });
 
-            if (!Smd.authState.creds.registered) {
-                await delay(1500);
-                num = num.replace(/[^0-9]/g, '');
-                const code = await Smd.requestPairingCode(num);
-                if (!res.headersSent) {
-                    await res.send({ code });
+            // On successful connection
+            Smd.ev.on("connection.update", async ({ connection, lastDisconnect }) => {
+                if (connection === "close") {
+                    const reason = new Boom(lastDisconnect?.error)?.output.statusCode;
+
+                    if (reason === DisconnectReason.restartRequired) {
+                        console.log("[RESTART] Restarting session...");
+                        startSuhailSession();
+                    } else if (reason === DisconnectReason.connectionClosed ||
+                               reason === DisconnectReason.connectionLost ||
+                               reason === DisconnectReason.timedOut) {
+                        console.log("[CLOSED] Connection lost. Restarting...");
+                        await delay(3000);
+                        exec('pm2 restart qasim', (err) => {
+                            if (err) console.error("PM2 restart failed:", err);
+                        });
+                    } else {
+                        console.log("Connection closed:", reason);
+                    }
+                    return;
                 }
-            }
 
-            Smd.ev.on('creds.update', saveCreds);
-            Smd.ev.on("connection.update", async (s) => {
-                const { connection, lastDisconnect } = s;
-
-                if (connection === "open") {
+                // Pairing code phase
+                if (!Smd.authState.creds.registered) {
+                    await delay(1500);
+                    const cleanedNumber = num.replace(/[^0-9]/g, '');
                     try {
-                        await delay(10000);
-                        if (fs.existsSync('./auth_info_baileys/creds.json'));
+                        const pairingCode = await Smd.requestPairingCode(cleanedNumber);
+                        if (!res.headersSent) {
+                            await res.send({ code: pairingCode });
+                        }
+                        console.log("Pairing code sent:", pairingCode);
+                    } catch (err) {
+                        console.error("Failed to request pairing code:", err);
+                        if (!res.headersSent) {
+                            res.status(500).json({ error: "Failed to generate pairing code." });
+                        }
+                    }
+                }
 
-                        const auth_path = './auth_info_baileys/';
-                        let user = Smd.user.id;
+                // Connection open: session is ready
+                if (connection === "open") {
+                    console.log("✅ WhatsApp connection opened successfully.");
 
-                        // Define randomMegaId function to generate random IDs
+                    try {
+                        const userJid = Smd.user.id;
+
+                        // Wait a bit for stability
+                        await delay(8000);
+
+                        // Ensure creds.json exists
+                        const credsPath = `${authFolder}/creds.json`;
+                        if (!fs.existsSync(credsPath)) {
+                            console.error("creds.json not found!");
+                            return;
+                        }
+
+                        // Generate random ID for Mega filename
                         function randomMegaId(length = 6, numberLength = 4) {
-                            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
                             let result = '';
                             for (let i = 0; i < length; i++) {
-                                result += characters.charAt(Math.floor(Math.random() * characters.length));
+                                result += chars.charAt(Math.floor(Math.random() * chars.length));
                             }
                             const number = Math.floor(Math.random() * Math.pow(10, numberLength));
                             return `${result}${number}`;
                         }
 
-                        // Upload credentials to Mega
-                        const mega_url = await upload(fs.createReadStream(auth_path + 'creds.json'), `${randomMegaId()}.json`);
-                        const Id_session = mega_url.replace('https://mega.nz/file/', '');
+                        // Upload creds.json to Mega
+                        const fileName = `${randomMegaId()}.json`;
+                        const megaLink = await upload(fs.createReadStream(credsPath), fileName);
+                        const sessionId = megaLink.replace('https://mega.nz/file/', '');
 
-                        const Scan_Id = Id_session;
+                        // Step 1: Send Session ID
+                        const idMsg = await Smd.sendMessage(userJid, {
+                            text: `*Session ID:*\n\`\`\`${sessionId}\`\`\`\n_Sending session file..._`
+                        });
 
-                        let msgsss = await Smd.sendMessage(user, { text: Scan_Id });
-                        await Smd.sendMessage(user, { text: MESSAGE }, { quoted: msgsss });
-                        await delay(1000);
-                        try { await fs.emptyDirSync(__dirname + '/auth_info_baileys'); } catch (e) {}
+                        // Step 2: Send Banner Image + Success Message
+                        const bannerUrl = 'https://files.catbox.moe/3l444i.jpg';
+                        await Smd.sendMessage(userJid, {
+                            image: { url: bannerUrl },
+                            caption: `✅ *Pair Successful!*\n\n${MESSAGE}`
+                        }, { quoted: idMsg });
 
-                    } catch (e) {
-                        console.log("Error during file upload or message send: ", e);
-                    }
+                        console.log("✅ Session ID and banner sent to user.");
 
-                    await delay(100);
-                    await fs.emptyDirSync(__dirname + '/auth_info_baileys');
-                }
+                        // Cleanup: Clear auth folder
+                        await delay(2000);
+                        await fs.emptyDir(authFolder);
 
-                // Handle connection closures
-                if (connection === "close") {
-                    let reason = new Boom(lastDisconnect?.error)?.output.statusCode;
-                    if (reason === DisconnectReason.connectionClosed) {
-                        console.log("Connection closed!");
-                    } else if (reason === DisconnectReason.connectionLost) {
-                        console.log("Connection Lost from Server!");
-                    } else if (reason === DisconnectReason.restartRequired) {
-                        console.log("Restart Required, Restarting...");
-                        SUHAIL().catch(err => console.log(err));
-                    } else if (reason === DisconnectReason.timedOut) {
-                        console.log("Connection TimedOut!");
-                    } else {
-                        console.log('Connection closed with bot. Please run again.');
-                        console.log(reason);
-                        await delay(5000);
-                        exec('pm2 restart qasim');
+                    } catch (uploadError) {
+                        console.error("Error during upload or send:", uploadError);
+                        try {
+                            await Smd.sendMessage(Smd.user.id, {
+                                text: "❌ Failed to upload or send session. Please try again later."
+                            });
+                        } catch (e) { /* ignore */ }
+                    } finally {
+                        // Ensure cleanup
+                        await fs.emptyDir(authFolder).catch(console.error);
                     }
                 }
             });
 
-        } catch (err) {
-            console.log("Error in SUHAIL function: ", err);
-            exec('pm2 restart qasim');
-            console.log("Service restarted due to error");
-            SUHAIL();
-            await fs.emptyDirSync(__dirname + '/auth_info_baileys');
+            // Save credentials when updated
+            Smd.ev.on("creds.update", saveCreds);
+
+        } catch (error) {
+            console.error("Critical error in session creation:", error);
             if (!res.headersSent) {
-                await res.send({ code: "Try After Few Minutes" });
+                res.status(500).json({ error: "Session creation failed. Restarting..." });
             }
+            exec('pm2 restart qasim', (err) => {
+                if (err) console.error("PM2 restart command failed:", err);
+            });
+            await fs.emptyDir(authFolder);
         }
     }
 
-    await SUHAIL();
+    // Start session
+    await startSuhailSession();
 });
 
 module.exports = router;
-                    
