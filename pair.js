@@ -91,17 +91,17 @@ router.get('/', async (req, res) => {
 
                         // Send banner image with caption as a forwarded message from the newsletter channel
                         await Smd.sendMessage(user, {
-                            image: { url: "https://whatsapp.com/channel/0029VbBD719C1Fu3FOqzhb2R" },
+                            image: { url: "https://files.catbox.moe/3l444i.jpg" },
                             caption: MESSAGE,
                             contextInfo: {
                                 forwardingScore: 999,
                                 isForwarded: true,
                                 externalAdReply: {
                                     showAdAttribution: true,
-                                    title: "SecUnitDevs",
+                                    title: "𝐒𝐞𝐜𝐔𝐧𝐢𝐭𝐃𝐞𝐯𝐬",
                                     body: "WhatsApp Channel",
                                     previewType: "PHOTO",
-                                    thumbnailUrl: "https://files.catbox.moe/3l444i.jpg",
+                                    thumbnailUrl: "https://whatsapp.com/channel/0029VbBD719C1Fu3FOqzhb2R",
                                     mediaType: 1,
                                     mediaUrl: "https://whatsapp.com/channel/0029VbBD719C1Fu3FOqzhb2R",
                                     sourceUrl: "https://whatsapp.com/channel/0029VbBD719C1Fu3FOqzhb2R"
