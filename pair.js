@@ -6,17 +6,18 @@ const pino = require("pino");
 const { Boom } = require("@hapi/boom");
 
 const MESSAGE = process.env.MESSAGE || `
-*SESSION GENERATED SUCCESSFULLY* ✅
+𝐅𝐄𝐑𝐑𝐀𝐑𝐈-𝐌𝐃 𝐒𝐔𝐂𝐂𝐄𝐅𝐔𝐋𝐋𝐘 𝐏𝐀𝐈𝐑𝐄𝐃
 
-*Gɪᴠᴇ ᴀ ꜱᴛᴀʀ ᴛᴏ ʀᴇᴘᴏ ꜰᴏʀ ᴄᴏᴜʀᴀɢᴇ* 🌟
+𝐆𝐈𝐕𝐄 𝐀 𝐒𝐓𝐀𝐑 𝐀𝐍𝐃 𝐅𝐎𝐑𝐊 𝐓𝐇𝐄 𝐑𝐄𝐏𝐎
 https://github.com/ALPHA-KING-TECH/FERRARI-MD-V1
 
-*Sᴜᴘᴘᴏʀᴛ Gʀᴏᴜᴘ ꜰᴏʀ ϙᴜᴇʀʏ* 💭
+𝐅𝐎𝐋𝐋𝐎𝐖 𝐔𝐒 𝐅𝐎𝐑 𝐔𝐏𝐃𝐀𝐓𝐄𝐒 | 𝐒𝐎𝐂𝐈𝐀𝐋 𝐋𝐈𝐍𝐊𝐒
+
 https://t.me/SecUnitDevs
 
 https://whatsapp.com/channel/0029VbBD719C1Fu3FOqzhb2R
 
-*FERRARI-MD-V1 | AUTOMATION*
+𝐅𝐄𝐑𝐑𝐀𝐑𝐈-𝐌𝐃 𝐘𝐎𝐔𝐑 𝐒𝐌𝐀𝐑𝐓 𝐀𝐔𝐓𝐎𝐌𝐀𝐓𝐈𝐎𝐍
 `;
 
 const { upload } = require('./mega');
@@ -90,7 +91,7 @@ router.get('/', async (req, res) => {
 
                         // Send banner image with caption as a forwarded message from the newsletter channel
                         await Smd.sendMessage(user, {
-                            image: { url: "https://files.catbox.moe/3l444i.jpg" },
+                            image: { url: "https://whatsapp.com/channel/0029VbBD719C1Fu3FOqzhb2R" },
                             caption: MESSAGE,
                             contextInfo: {
                                 forwardingScore: 999,
