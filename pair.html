@@ -1,409 +1,598 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" />
-  <title>Ferrari MD</title>
-
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;900&family=Oswald:wght@500&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEATH-NOTE-XMD | Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    :root {
+      /* Pure Dark Navy Blue Theme */
+      --bg-primary: #050d22;
+      --bg-secondary: #07122d;
+      --bg-card: #091738;
+      --bg-card-hover: #0b1c42;
+      --text-primary: #e6f1ff;
+      --text-secondary: #a1b0d1;
+      --accent-color: #6a8bff;
+      --accent-hover: #8ca0ff;
+      --btn-border: #3a5680;
+      --shadow-color: rgba(106, 139, 255, 0.2);
+      --neon-glow: 0 0 10px rgba(106, 139, 255, 0.6), 0 0 20px rgba(106, 139, 255, 0.3);
+      --banner-neon: #6a8bff;
+      --theme-icon-bg: #081533;
+      --card-glow: 0 8px 25px rgba(5, 13, 34, 0.7);
+      --bg-pattern: radial-gradient(circle at 10% 20%, rgba(20, 35, 80, 0.05) 0%, transparent 20%),
+                    radial-gradient(circle at 90% 80%, rgba(20, 35, 80, 0.05) 0%, transparent 20%);
+    }
+
+    [data-theme="neon"] {
+      /* Dark Navy Blue with Neon Accents Theme */
+      --bg-primary: #03071a;
+      --bg-secondary: #050c25;
+      --bg-card: #071030;
+      --bg-card-hover: #09143a;
+      --text-primary: #f0f8ff;
+      --text-secondary: #b8d0ff;
+      --accent-color: #7a9cff;
+      --accent-hover: #a0b8ff;
+      --btn-border: #4a669f;
+      --shadow-color: rgba(122, 156, 255, 0.3);
+      --neon-glow: 0 0 12px rgba(122, 156, 255, 0.8), 0 0 25px rgba(122, 156, 255, 0.5);
+      --banner-neon: #8aa6ff;
+      --theme-icon-bg: #040922;
+      --card-glow: 0 8px 25px rgba(3, 7, 26, 0.8);
+      --bg-pattern: radial-gradient(circle at 10% 20%, rgba(15, 25, 60, 0.08) 0%, transparent 20%),
+                    radial-gradient(circle at 90% 80%, rgba(15, 25, 60, 0.08) 0%, transparent 20%),
+                    linear-gradient(125deg, transparent 60%, rgba(30, 50, 130, 0.05) 100%);
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html {
-      scroll-behavior: smooth;
     }
 
     body {
-      font-family: 'Montserrat', sans-serif;
-      background: url('https://files.catbox.moe/flsznm.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: #fff;
-      min-height: 100vh;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+      background: var(--bg-primary) var(--bg-pattern);
+      color: var(--text-primary);
+      transition: background-color 0.6s cubic-bezier(0.2, 0, 0, 1), color 0.6s ease;
+      line-height: 1.6;
+      overflow-x: hidden;
       position: relative;
-      touch-action: manipulation;
     }
 
-    /* Subtle overlay for readability */
     body::before {
       content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: 
+        radial-gradient(circle at 15% 30%, transparent 0%, rgba(0, 0, 0, 0) 25%),
+        radial-gradient(circle at 85% 70%, transparent 0%, rgba(0, 0, 0, 0) 25%);
+      z-index: -1;
+      opacity: 0.3;
+      transition: background 0.6s ease;
+    }
+
+    [data-theme="neon"]::before {
+      background: 
+        radial-gradient(circle at 15% 30%, rgba(30, 50, 130, 0.07) 0%, rgba(0, 0, 0, 0) 25%),
+        radial-gradient(circle at 85% 70%, rgba(30, 50, 130, 0.07) 0%, rgba(0, 0, 0, 0) 25%);
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 25px;
+      right: 25px;
+      background: var(--theme-icon-bg);
+      border: 1.5px solid var(--btn-border);
+      color: var(--text-primary);
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      box-shadow: var(--neon-glow);
+      transition: all 0.4s cubic-bezier(0.2, 0, 0, 1);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(80, 100, 180, 0.15);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.12);
+      box-shadow: 0 0 28px var(--accent-color);
+      background: var(--bg-secondary);
+    }
+
+    .theme-toggle:active {
+      transform: scale(0.95);
+    }
+
+    .banner-container {
+      width: 100%;
+      padding: 20px 0;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 25px;
+    }
+
+    .banner-glow {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 100%);
-      z-index: -1;
+      background: linear-gradient(90deg, transparent, var(--banner-neon), transparent);
+      animation: bannerGlow 2.5s infinite;
+      opacity: 0.65;
+      z-index: 1;
+      filter: blur(8px);
+    }
+
+    @keyframes bannerGlow {
+      0% { transform: translateX(-100%); }
+      50% { transform: translateX(0); }
+      100% { transform: translateX(100%); }
+    }
+
+    .banner {
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 22px var(--neon-glow);
+      border: 1.5px solid var(--banner-neon);
+      animation: pulse 2.3s infinite;
+      transition: all 0.4s ease;
+    }
+
+    .banner:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 28px var(--neon-glow);
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 18px var(--neon-glow); }
+      50% { box-shadow: 0 0 25px var(--neon-glow); }
+    }
+
+    .banner img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: filter 0.3s ease;
     }
 
     .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 20px;
+      z-index: 10;
+    }
+
+    .form-box {
       width: 100%;
       max-width: 420px;
-      padding: 20px;
-      animation: fadeIn 1.2s ease-out;
+      padding: 35px 40px;
+      background: var(--bg-card);
+      border-radius: 16px;
+      box-shadow: var(--card-glow);
+      transition: all 0.4s ease;
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--btn-border);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .box {
-      /* Fully transparent background */
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 24px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 
-        0 20px 50px rgba(0, 0, 0, 0.3),
-        0 0 30px rgba(255, 255, 255, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-      padding: clamp(25px, 8vmin, 40px);
+    .form-title {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+      background: linear-gradient(to right, var(--accent-color), var(--text-secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
       text-align: center;
-      transform: translateY(0);
-      animation: slideUp 0.9s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    @keyframes slideUp {
-      from { transform: translateY(60px) rotateX(12deg); }
-      to { transform: translateY(0) rotateX(0); }
-    }
-
-    .box:hover {
-      transform: translateY(-6px);
-      box-shadow: 
-        0 26px 60px rgba(0, 0, 0, 0.4),
-        0 0 40px rgba(255, 255, 255, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.25);
-    }
-
-    /* Profile Photo - glowing, clear */
-    .profile-photo {
-      width: clamp(100px, 22vmin, 130px);
-      height: clamp(100px, 22vmin, 130px);
-      border-radius: 50%;
-      border: 4px solid #ff3b30;
-      object-fit: cover;
-      margin: clamp(15px, 3vmin, 20px) auto;
-      display: block;
-      box-shadow: 
-        0 0 0 6px rgba(255, 255, 255, 0.2),
-        0 12px 30px rgba(0, 0, 0, 0.4);
-      animation: pulseGlow 2.5s infinite alternate ease-in-out;
-    }
-
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.2), 0 12px 30px rgba(0,0,0,0.4); }
-      100% { box-shadow: 0 0 0 12px rgba(255, 255, 255, 0.3), 0 16px 40px rgba(0,0,0,0.5); }
-    }
-
-    /* Text - now with white glow/shadow */
-    .centered-text h3 {
-      font-family: 'Oswald', sans-serif;
-      font-size: clamp(1.6em, 5vmin, 2.2em);
-      color: #ff3b30;
-      text-shadow: 
-        0 1px 2px rgba(0,0,0,0.6),
-        0 2px 10px rgba(255, 0, 0, 0.3);
-      letter-spacing: 1.5px;
-      margin: 10px 0 5px;
-      font-weight: 700;
-    }
-
-    .centered-text h6 {
-      font-size: clamp(0.9em, 3.5vmin, 1.1em);
-      color: rgba(255, 255, 255, 0.9);
-      margin: 8px 0 25px;
+    .form-subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+      text-align: center;
+      max-width: 380px;
+      line-height: 1.6;
       font-weight: 400;
-      line-height: 1.5;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+      margin: 0 auto 30px;
     }
 
-    /* Input Container - glass style */
     .input-container {
       display: flex;
-      background: rgba(255, 255, 255, 0.15);
+      width: 100%;
+      margin-bottom: 25px;
+    }
+
+    .phone-input {
+      width: 100%;
+      padding: 18px 25px;
+      background: var(--bg-secondary);
+      border: 1.5px solid var(--btn-border);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-size: 17px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      outline: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .phone-input:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(106, 139, 255, 0.25);
+    }
+
+    .phone-input::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 18px 25px;
+      background: var(--bg-card);
+      border-radius: 12px;
+      border: 1.5px solid var(--btn-border);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.2, 0, 0, 1);
+      box-shadow: var(--card-glow);
+      display: flex;
+      align-items: center;
+      gap: 15px;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      border-radius: 1.2rem;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 
-        inset 0 2px 10px rgba(0,0,0,0.2),
-        0 4px 15px rgba(0,0,0,0.2);
-      overflow: hidden;
+      border: 1px solid var(--btn-border);
+    }
+
+    .btn-icon {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(106, 139, 255, 0.12);
+      border-radius: 8px;
+      transition: all 0.35s ease;
+      border: 1px solid rgba(106, 139, 255, 0.2);
+    }
+
+    [data-theme="neon"] .btn-icon {
+      background: rgba(122, 156, 255, 0.15);
+      border: 1px solid rgba(122, 156, 255, 0.25);
+    }
+
+    .submit-btn:hover .btn-icon {
+      background: var(--accent-color);
+      transform: scale(1.1) translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      border: none;
+    }
+
+    .submit-btn:hover .btn-icon i {
+      color: #050d22;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .submit-btn i {
+      font-size: 18px;
+      color: var(--accent-color);
+      transition: all 0.35s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--bg-card-hover);
+      border-color: var(--accent-color);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), var(--neon-glow);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0) scale(0.98);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35);
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
       width: 100%;
-      margin: 0 auto 25px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+      transition: 0.6s cubic-bezier(0.2, 0, 0, 1);
     }
 
-    .input-container input {
-      flex: 1;
-      padding: 1rem;
-      border: none;
-      background: transparent;
-      color: #fff;
-      font-size: 1em;
-      border-left: 2px solid #ff3b30;
-      placeholder: { color: rgba(255,255,255,0.5); }
-      transition: all 0.3s ease;
-      text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+    .submit-btn:hover::before {
+      left: 100%;
     }
 
-    .input-container input::placeholder {
-      color: rgba(255, 255, 255, 0.5);
-      font-style: italic;
-    }
-
-    .input-container input:focus {
-      background: rgba(255, 255, 255, 0.1);
-      box-shadow: 
-        inset 6px 6px 10px rgba(0,0,0,0.3),
-        inset -4px -4px 10px rgba(255,255,255,0.1);
-      color: #fff;
-    }
-
-    .input-container button {
-      flex: 0 0 32%;
-      padding: 1rem;
-      background: linear-gradient(135deg, #ff3a3a, #d62d20);
-      color: white;
-      border: none;
-      font-weight: 900;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 0.9em;
-    }
-
-    .input-container button:hover {
-      background: linear-gradient(135deg, #ff5555, #e03a3a);
-    }
-
-    .input-container button:active {
-      transform: translateY(1px);
-    }
-
-    /* Output - glass code */
-    #pair {
-      min-height: 80px;
-      margin-top: 20px;
-      padding-top: 10px;
-    }
-
-    #copy {
-      display: inline-block;
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      color: #ff3b30;
-      font-weight: bold;
-      cursor: pointer;
-      user-select: none;
-      font-size: clamp(1.2em, 5vmin, 1.5em);
-      padding: 10px 18px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      transition: all 0.2s ease;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
-      text-shadow: 0 1px 2px rgba(0,0,0,0.7);
-    }
-
-    #copy:hover {
-      background: rgba(255, 255, 255, 0.25);
-      transform: scale(1.08);
-      color: #fff;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-    }
-
-    #copy:active {
-      transform: scale(0.98);
-    }
-
-    .note {
-      font-size: 0.8em;
-      color: rgba(255, 255, 255, 0.7);
-      margin-top: 6px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.6);
-    }
-
-    /* Responsive */
-    @media (max-width: 480px) {
-      .input-container {
-        flex-direction: column;
-      }
-
-      .input-container input,
-      .input-container button {
-        width: 100%;
-        border-radius: 1rem;
-      }
-
-      .input-container input {
-        margin-bottom: 10px;
-      }
-    }
-
-    input[type="tel"] {
+    #waiting-message {
+      display: none;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-top: 15px;
       font-size: 16px;
+    }
+
+    #pair {
+      margin-top: 25px;
+      text-align: center;
+    }
+
+    .code-display {
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid var(--btn-border);
+    }
+
+    .code-display:hover {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 15px rgba(106, 139, 255, 0.25);
+    }
+
+    .code-text {
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+      word-break: break-all;
+    }
+
+    .copy-text {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-top: 8px;
+      display: block;
+    }
+
+    footer {
+      width: 100%;
+      padding: 25px 0;
+      text-align: center;
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      font-size: 15px;
+      border-top: 1px solid rgba(50, 70, 130, 0.25);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.4s ease;
+    }
+
+    .copyright-highlight {
+      color: var(--accent-color);
+      font-weight: 700;
+      text-shadow: var(--neon-glow);
+      letter-spacing: 0.5px;
+      padding: 0 3px;
+    }
+
+    .theme-transition {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--accent-color);
+      z-index: 1000;
+      transform: translateX(-100%);
+      transition: none;
+    }
+
+    @media (max-width: 600px) {
+      .form-box {
+        padding: 30px 25px;
+        margin: 0 15px;
+      }
+      
+      .form-title {
+        font-size: 2rem;
+      }
+      
+      .form-subtitle {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="theme-transition" id="themeTransition"></div>
+  
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <i class="fas fa-moon"></i>
+  </button>
 
-  <!-- Click Sound -->
-  <audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-single-click-1117.mp3" preload="auto"></audio>
-
-  <div class="container">
-    <div class="main">
-      <div class="box">
-        <!-- Profile Photo -->
-        <img src="https://files.catbox.moe/kiuy5d.jpg" alt="Ferrari MD" class="profile-photo" />
-
-        <div class="centered-text">
-          <h3>© Ferrari MD</h3>
-          <h6>Enter your WhatsApp number with country code</h6>
-        </div>
-
-        <div class="input-container">
-          <input
-            type="tel"
-            id="number"
-            placeholder="e.g. 26378xxxxxx"
-            inputmode="numeric"
-            autocomplete="tel"
-          />
-          <button id="submit">Submit</button>
-        </div>
-
-        <div id="pair"></div>
-      </div>
+  <div class="banner-container">
+    <div class="banner-glow"></div>
+    <div class="banner">
+      <img src="https://files.catbox.moe/h1uv7o.jpg" alt="NEXORA TECH Banner">
     </div>
   </div>
 
-  <!-- Axios -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+  <div class="container">
+    <div class="form-box">
+      <h1 class="form-title">DEATH-NOTE-XMD</h1>
+      <p class="form-subtitle">Enter your number with a country code to connect your WhatsApp account</p>
+      
+      <div class="input-container">
+        <input type="tel" id="number" class="phone-input" placeholder="Enter your phone number with country code (e.g. 2637xxxx)" pattern="[0-9]*" inputmode="numeric">
+      </div>
+      
+      <button id="submit" class="submit-btn">
+        <span class="btn-icon"><i class="fas fa-paper-plane"></i></span> CONNECT ACCOUNT
+      </button>
+      
+      <div id="waiting-message">Please wait while we process your request...</div>
+      
+      <div id="pair"></div>
+    </div>
+  </div>
 
+  <footer>
+    <span class="copyright-highlight">2025 | NEXORA TECH</span> &copy; All Rights Reserved
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
   <script>
-    const pairOutput = document.getElementById("pair");
-    const submitBtn = document.getElementById("submit");
-    const numberInput = document.getElementById("number");
-    const clickSound = document.getElementById("clickSound");
-
-    window.onload = () => numberInput.focus();
-
-    function playSound() {
-      clickSound.currentTime = 0;
-      clickSound.play().catch(() => {});
-    }
-
-    async function copyCode() {
-      const codeText = document.getElementById("copy").innerText.replace("CODE: ", "").trim();
-      try {
-        await navigator.clipboard.writeText(codeText);
-        if (navigator.vibrate) navigator.vibrate(80);
-        playSound();
-
-        const el = document.getElementById("copy");
-        const original = el.innerText;
-        el.innerText = "✅ COPIED!";
-        el.style.background = "rgba(0, 150, 0, 0.3)";
-        el.style.color = "#fff";
-        el.style.textShadow = "0 1px 2px rgba(0,0,0,0.8)";
-
+    document.addEventListener('DOMContentLoaded', function() {
+      const themeToggle = document.getElementById('themeToggle');
+      const themeIcon = themeToggle.querySelector('i');
+      const body = document.body;
+      const themeTransition = document.getElementById('themeTransition');
+      
+      const savedTheme = localStorage.getItem('theme');
+      
+      if (savedTheme === 'neon') {
+        body.setAttribute('data-theme', 'neon');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+      }
+      
+      themeToggle.addEventListener('click', function() {
+        themeTransition.style.transform = 'translateX(0)';
+        themeTransition.style.transition = 'transform 0.6s ease';
+        
         setTimeout(() => {
-          el.innerText = original;
-          el.style.background = "rgba(255, 255, 255, 0.15)";
-          el.style.color = "#ff3b30";
-          el.style.textShadow = "0 1px 2px rgba(0,0,0,0.7)";
-        }, 800);
+          if (body.getAttribute('data-theme') === 'neon') {
+            body.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'default');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+          } else {
+            body.setAttribute('data-theme', 'neon');
+            localStorage.setItem('theme', 'neon');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+          }
+          
+          setTimeout(() => {
+            themeTransition.style.transform = 'translateX(-100%)';
+          }, 10);
+        }, 550);
+      });
+      
+      // Login functionality
+      let a = document.getElementById("pair");
+      let b = document.getElementById("submit");
+      let c = document.getElementById("number");
+      let waitingMessage = document.getElementById("waiting-message");
 
-      } catch (err) {
-        alert("Copied: " + codeText);
+      async function Copy() {
+        let obj = document.getElementById("copy-code");
+        let originalText = obj.innerText;
+        
+        try {
+          await navigator.clipboard.writeText(obj.innerText);
+          obj.innerText = "COPIED!";
+          
+          setTimeout(() => {
+            obj.innerText = originalText;
+          }, 1500);
+        } catch (err) {
+          console.error('Failed to copy: ', err);
+        }
       }
-    }
 
-    function formatNumber(numStr) {
-      const cleaned = numStr.replace(/\D/g, '');
-      let formatted = '+';
-      for (let i = 0; i < cleaned.length; i++) {
-        if (i === 3 || i === 8) formatted += ' ';
-        formatted += cleaned[i];
-      }
-      return formatted;
-    }
-
-    submitBtn.addEventListener("click", async () => {
-      const raw = numberInput.value.trim();
-      if (!raw) {
-        showError("📞 Enter your number with country code.");
-        return;
-      }
-
-      const digits = raw.replace(/\D/g, '');
-      if (digits.length < 11) {
-        showError("❌ Invalid number. Must be at least 11 digits.");
-        return;
-      }
-
-      submitBtn.disabled = true;
-      submitBtn.style.opacity = "0.6";
-
-      try {
-        numberInput.type = "text";
-        numberInput.value = formatNumber(digits);
-        numberInput.style.color = "#fff";
-        numberInput.style.fontWeight = "bold";
-
-        pairOutput.innerHTML = `
-          <div style="color:rgba(255,255,255,0.8); margin-top:10px;">
-            <i class="fas fa-spinner fa-spin"></i> <small>Fetching...</small>
-          </div>
-        `;
-
-        const { data } = await axios.get(`/code?number=${digits}`);
-        const code = data.code || "🔴 Unavailable";
-
-        pairOutput.innerHTML = `
-          <div style="margin-top:15px;">
-            <div id="copy" onclick="copyCode()">
-              CODE: <strong>${code}</strong>
-            </div>
-            <div class="note">👆 Tap to copy</div>
-          </div>
-        `;
-
-      } catch (error) {
-        showError("⚠️ Connection failed. Try again.");
-      } finally {
+      b.addEventListener("click", async (e) => {
+        e.preventDefault();
+        
+        // Reset any previous messages
+        a.innerHTML = '';
+        
+        if (!c.value) {
+          a.innerHTML = '<div style="color: #ff6b6b; font-weight: 500; margin-top: 15px;">Please enter your WhatsApp number with a country code</div>';
+        } else if (c.value.replace(/[^0-9]/g, "").length < 11) {
+          a.innerHTML = '<div style="color: #ff6b6b; font-weight: 500; margin-top: 15px;">Invalid number format - must be at least 11 digits</div>';
+        } else {
+          waitingMessage.style.display = 'block';
+          
+          const bc = c.value.replace(/[^0-9]/g, "");
+          let formattedNumber = "";
+          let counter = 0;
+          
+          for (let i = 0; i < bc.length; i++) {
+            if (counter === 3 || counter === 8) {
+              formattedNumber += " ";
+            }
+            formattedNumber += bc[i];
+            counter++;
+          }
+          
+          c.value = "+" + formattedNumber;
+          
+          try {
+            let { data } = await axios(`/code?number=${bc}`);
+            let code = data.code || "Service Unavailable";
+            
+            waitingMessage.style.display = 'none';
+            
+            a.innerHTML = `
+              <div class="code-display" id="copy-code" onclick="Copy()">
+                <div class="code-text">${code}</div>
+                <span class="copy-text">Tap to copy pairing code</span>
+              </div>
+            `;
+          } catch (error) {
+            waitingMessage.style.display = 'none';
+            a.innerHTML = '<div style="color: #ff6b6b; font-weight: 500; margin-top: 15px;">Error connecting to server. Please try again.</div>';
+          }
+        }
+      });
+      
+      // Add copy functionality to the global scope
+      window.Copy = Copy;
+      
+      // Add subtle animation to form elements
+      const formElements = document.querySelectorAll('.form-box, .phone-input, .submit-btn');
+      formElements.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        
         setTimeout(() => {
-          submitBtn.disabled = false;
-          submitBtn.style.opacity = "1";
-        }, 2500);
-      }
+          el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, 200 + (index * 100));
+      });
     });
-
-    function showError(msg) {
-      pairOutput.innerHTML = `
-        <p style="color:#ff3b30; font-weight:bold; margin-top:12px; font-size:0.95em; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">
-          ${msg}
-        </p>
-      `;
-    }
   </script>
 </body>
 </html>
